@@ -1,0 +1,992 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\paul\Desktop\eco340\Minho_Atakan_ECO340_TERMPAPER.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 3 Apr 2020, 00:04:01
+
+{com}. do "C:\Users\paul\Desktop\eco340\Minho_Atakan_ECO340_TERMPAPER.do"
+{txt}
+{com}. clear all
+{res}{txt}
+{com}. set more off 
+{txt}
+{com}. cd "C:\Users\paul\Desktop\eco340"
+{res}C:\Users\paul\Desktop\eco340
+{txt}
+{com}. use census0611_new
+{txt}(Pooled 2006 and 2011 Census Subsamples)
+
+{com}. 
+. 
+. *separating education variable into four different indicator variables 
+. gen educ0 = educ if(educ==0)
+{txt}(563,017 missing values generated)
+
+{com}. gen educ1 = educ if(educ==1)
+{txt}(488,799 missing values generated)
+
+{com}. gen educ2 = educ if(educ==2)
+{txt}(416,371 missing values generated)
+
+{com}. gen educ3 = educ if(educ==3)
+{txt}(545,847 missing values generated)
+
+{com}. gen educ4 = educ if(educ==4)
+{txt}(588,566 missing values generated)
+
+{com}. 
+. replace educ0 = 1 if(educ0==0)
+{txt}(87,633 real changes made)
+
+{com}. replace educ0 = 0 if(educ0==. & educ != .)
+{txt}(563,017 real changes made)
+
+{com}. replace educ1 = 0 if(educ1==. & educ != .)
+{txt}(488,799 real changes made)
+
+{com}. replace educ2 = 1 if(educ2==2)
+{txt}(234,279 real changes made)
+
+{com}. replace educ2 = 0 if(educ2==. & educ != .)
+{txt}(416,371 real changes made)
+
+{com}. replace educ3 = 1 if(educ3==3)
+{txt}(104,803 real changes made)
+
+{com}. replace educ3 = 0 if(educ3==. & educ != .)
+{txt}(545,847 real changes made)
+
+{com}. replace educ4 = 1 if(educ4==4)
+{txt}(62,084 real changes made)
+
+{com}. replace educ4 = 0 if(educ4==. & educ != .)
+{txt}(588,566 real changes made)
+
+{com}.  
+. 
+. gen age1 = agegrp if(agegrp==8 | agegrp==9 | agegrp==10)
+{txt}(454,544 missing values generated)
+
+{com}. replace age1 = 1 if(age1 != .)
+{txt}(196,106 real changes made)
+
+{com}. replace age1 = 0 if(age1==. & agegrp != .)
+{txt}(454,544 real changes made)
+
+{com}. gen age2 = agegrp if(agegrp==11 | agegrp==12 | agegrp==13)
+{txt}(410,875 missing values generated)
+
+{com}. replace age2 = 1 if(age2 ! =.)
+{txt}(239,775 real changes made)
+
+{com}. replace age2 = 0 if(age2==. & agegrp != .)
+{txt}(410,875 real changes made)
+
+{com}. gen age3 = agegrp if(agegrp==14 | agegrp==15 | agegrp==16)
+{txt}(435,881 missing values generated)
+
+{com}. replace age3 = 1 if(age3 != .)
+{txt}(214,769 real changes made)
+
+{com}. replace age3 = 0 if(age3==. & agegrp != .)
+{txt}(435,881 real changes made)
+
+{com}. 
+. 
+. *cohort 1 indicates those from developed countries, and cohort 2 indicates those from developing countries
+. 
+. gen coh1 = pob if(pob== 1 | pob== 2 | pob== 7 | pob== 8 | pob== 9 | pob== 11 | pob== 12 | pob== 20 | pob== 27)
+{txt}(176,644 missing values generated)
+
+{com}. replace coh1 = 1 if(coh1 !=.)
+{txt}(69,283 real changes made)
+
+{com}. replace coh1 = 0 if(coh1 ==. & pob != .)
+{txt}(171,672 real changes made)
+
+{com}. gen coh2 = pob if(coh1== 0)
+{txt}(478,978 missing values generated)
+
+{com}. replace coh2 = 1 if(coh2 !=.)
+{txt}(171,672 real changes made)
+
+{com}. replace coh2 = 0 if(coh2 ==. & pob != .)
+{txt}(474,006 real changes made)
+
+{com}. 
+. 
+. gen cnda = pob if(pob==1)
+{txt}(245,927 missing values generated)
+
+{com}. replace cnda = 0 if(cnda ==. & pob != .)
+{txt}(240,955 real changes made)
+
+{com}. 
+. 
+. gen se_inc = cow if(cow==3 | cow==4)
+{txt}(401,639 missing values generated)
+
+{com}. replace se_inc = 1 if(se_inc != .)
+{txt}(249,011 real changes made)
+
+{com}. replace se_inc = 0 if(se_inc == . & cow != .)
+{txt}(291,884 real changes made)
+
+{com}. gen se_uninc = cow if(cow==5 | cow==6)
+{txt}(614,102 missing values generated)
+
+{com}. replace se_uninc = 1 if(se_uninc != .)
+{txt}(36,548 real changes made)
+
+{com}. replace se_uninc = 0 if(se_uninc == . & cow != .)
+{txt}(504,347 real changes made)
+
+{com}. gen emp = cow if(cow==1)
+{txt}(400,169 missing values generated)
+
+{com}. replace emp = 0 if(emp==. & cow !=.)
+{txt}(290,414 real changes made)
+
+{com}. 
+. gen selfemp = se_inc + se_uninc
+{txt}(109,755 missing values generated)
+
+{com}. 
+. *mar=1 if legally married or living in common law,
+. *mar=0 if never legally married, separted, divorced, or widowed. 
+. gen mar = marsth if(marsth == 2 | marsth == 3)
+{txt}(210,161 missing values generated)
+
+{com}. replace mar = 1 if(mar != .)
+{txt}(440,489 real changes made)
+
+{com}. replace mar = 0 if(mar == . & marsth !=.)
+{txt}(210,161 real changes made)
+
+{com}. gen unmar = marsth if(mar == 0)
+{txt}(440,489 missing values generated)
+
+{com}. replace unmar = 1 if(unmar != .)
+{txt}(110,852 real changes made)
+
+{com}. replace unmar = 0 if(unmar == . & marsth !=.)
+{txt}(440,489 real changes made)
+
+{com}. 
+. gen hhsze = hhsize if(hhsize != 8)
+{txt}(1,834 missing values generated)
+
+{com}. 
+. gen female = sex if(sex == 1)
+{txt}(317,511 missing values generated)
+
+{com}. replace female = 0 if (sex==2)
+{txt}(317,511 real changes made)
+
+{com}. 
+. gen lnwage = log(wages)
+{txt}(159,629 missing values generated)
+
+{com}. 
+. *did not include wage due to possible issue of reserve casaulity 
+. 
+. gen pkid = 1 if(pkid0_1 == 1 |pkid2_5 == 1 | pkid6_14 == 1 | pkid15_24 == 1 | pkid25==1)
+{txt}(270,440 missing values generated)
+
+{com}. replace pkid = 0 if(pkid==. & (pkid0_1 != . | pkid2_5 != . | pkid6_14 != . | pkid15_24 != . | pkid25 != .))
+{txt}(152,762 real changes made)
+
+{com}. 
+. 
+. *if one of official languages of canada is spoken at home
+. gen hloff = 1 if(hlaen == 1 | hlafr == 1)
+{txt}(112,472 missing values generated)
+
+{com}. replace hloff = 0 if(hloff == . & hlaen != . )
+{txt}(112,472 real changes made)
+
+{com}. *non-permanent residents counted as immigrants
+. gen minority = vismin if(vismin != 13)
+{txt}(484,947 missing values generated)
+
+{com}. replace minority = 1 if(minority != .)
+{txt}(122,964 real changes made)
+
+{com}. replace minority = 0 if(minority == . & vismin != .)
+{txt}(480,932 real changes made)
+
+{com}. 
+. gen int1 = female*coh2
+{txt}(4,972 missing values generated)
+
+{com}. 
+. gen fem_imm = female if(cnda == 0)
+{txt}(409,695 missing values generated)
+
+{com}. replace fem_imm = 0 if(pob==1)
+{txt}(404,723 real changes made)
+
+{com}. 
+. *se rate in developing: 0.497513101
+. *se rate in dveloped: 0.542613969
+. 
+. logit selfemp educ1 educ2 educ3 educ4 age2 age3 mar ysm hhsze coh2 female int1 pkid hloff prihm i.efdecile invst, r
+
+{res}{txt}Iteration 0:{space 3}log pseudolikelihood = {res:-74839.177}  
+Iteration 1:{space 3}log pseudolikelihood = {res:-69700.266}  
+Iteration 2:{space 3}log pseudolikelihood = {res:-69017.002}  
+Iteration 3:{space 3}log pseudolikelihood = {res:-68982.902}  
+Iteration 4:{space 3}log pseudolikelihood = {res:-68982.843}  
+Iteration 5:{space 3}log pseudolikelihood = {res:-68982.843}  
+{res}
+{txt}Logistic regression{col 49}Number of obs{col 67}= {res}   224,083
+{txt}{col 49}Wald chi2({res}25{txt}){col 67}= {res}   8743.60
+{txt}{col 49}Prob > chi2{col 67}= {res}    0.0000
+{txt}Log pseudolikelihood = {res}-68982.843{txt}{col 49}Pseudo R2{col 67}= {res}    0.0783
+
+{txt}{hline 16}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 17}{c |}{col 29}    Robust
+{col 1}        selfemp{col 17}{c |}      Coef.{col 29}   Std. Err.{col 41}      z{col 49}   P>|z|{col 57}     [95% Con{col 70}f. Interval]
+{hline 16}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 10}educ1 {c |}{col 17}{res}{space 2} .0548571{col 29}{space 2} .0273235{col 40}{space 1}    2.01{col 49}{space 3}0.045{col 57}{space 4}  .001304{col 70}{space 3} .1084102
+{txt}{space 10}educ2 {c |}{col 17}{res}{space 2} .1248553{col 29}{space 2} .0257009{col 40}{space 1}    4.86{col 49}{space 3}0.000{col 57}{space 4} .0744825{col 70}{space 3} .1752281
+{txt}{space 10}educ3 {c |}{col 17}{res}{space 2} .1965603{col 29}{space 2} .0294597{col 40}{space 1}    6.67{col 49}{space 3}0.000{col 57}{space 4} .1388203{col 70}{space 3} .2543003
+{txt}{space 10}educ4 {c |}{col 17}{res}{space 2} .3553345{col 29}{space 2}   .03116{col 40}{space 1}   11.40{col 49}{space 3}0.000{col 57}{space 4}  .294262{col 70}{space 3}  .416407
+{txt}{space 11}age2 {c |}{col 17}{res}{space 2} .6560277{col 29}{space 2} .0228107{col 40}{space 1}   28.76{col 49}{space 3}0.000{col 57}{space 4} .6113195{col 70}{space 3} .7007359
+{txt}{space 11}age3 {c |}{col 17}{res}{space 2}  .991659{col 29}{space 2} .0235816{col 40}{space 1}   42.05{col 49}{space 3}0.000{col 57}{space 4}   .94544{col 70}{space 3} 1.037878
+{txt}{space 12}mar {c |}{col 17}{res}{space 2} .6715219{col 29}{space 2} .0268634{col 40}{space 1}   25.00{col 49}{space 3}0.000{col 57}{space 4} .6188707{col 70}{space 3} .7241731
+{txt}{space 12}ysm {c |}{col 17}{res}{space 2} .0099696{col 29}{space 2} .0005768{col 40}{space 1}   17.29{col 49}{space 3}0.000{col 57}{space 4} .0088391{col 70}{space 3}    .0111
+{txt}{space 10}hhsze {c |}{col 17}{res}{space 2} .0165147{col 29}{space 2} .0074717{col 40}{space 1}    2.21{col 49}{space 3}0.027{col 57}{space 4} .0018704{col 70}{space 3}  .031159
+{txt}{space 11}coh2 {c |}{col 17}{res}{space 2}-.3774961{col 29}{space 2}  .024185{col 40}{space 1}  -15.61{col 49}{space 3}0.000{col 57}{space 4}-.4248979{col 70}{space 3}-.3300943
+{txt}{space 9}female {c |}{col 17}{res}{space 2}-.5325771{col 29}{space 2} .0182684{col 40}{space 1}  -29.15{col 49}{space 3}0.000{col 57}{space 4}-.5683824{col 70}{space 3}-.4967717
+{txt}{space 11}int1 {c |}{col 17}{res}{space 2}-.1337032{col 29}{space 2} .0339543{col 40}{space 1}   -3.94{col 49}{space 3}0.000{col 57}{space 4}-.2002523{col 70}{space 3} -.067154
+{txt}{space 11}pkid {c |}{col 17}{res}{space 2} .0128803{col 29}{space 2} .0208827{col 40}{space 1}    0.62{col 49}{space 3}0.537{col 57}{space 4} -.028049{col 70}{space 3} .0538097
+{txt}{space 10}hloff {c |}{col 17}{res}{space 2}-.0153167{col 29}{space 2}  .022251{col 40}{space 1}   -0.69{col 49}{space 3}0.491{col 57}{space 4}-.0589279{col 70}{space 3} .0282945
+{txt}{space 10}prihm {c |}{col 17}{res}{space 2}-.0397358{col 29}{space 2} .0163065{col 40}{space 1}   -2.44{col 49}{space 3}0.015{col 57}{space 4}-.0716959{col 70}{space 3}-.0077757
+{txt}{space 15} {c |}
+{space 7}efdecile {c |}
+{space 1}Second decile  {c |}{col 17}{res}{space 2} .1173365{col 29}{space 2} .0342766{col 40}{space 1}    3.42{col 49}{space 3}0.001{col 57}{space 4} .0501556{col 70}{space 3} .1845174
+{txt}{space 2}Third decile  {c |}{col 17}{res}{space 2}-.2853654{col 29}{space 2} .0337374{col 40}{space 1}   -8.46{col 49}{space 3}0.000{col 57}{space 4}-.3514895{col 70}{space 3}-.2192413
+{txt}{space 1}Fourth decile  {c |}{col 17}{res}{space 2}-.5279742{col 29}{space 2}  .033827{col 40}{space 1}  -15.61{col 49}{space 3}0.000{col 57}{space 4}-.5942739{col 70}{space 3}-.4616744
+{txt}{space 2}Fifth decile  {c |}{col 17}{res}{space 2}-.7790549{col 29}{space 2} .0342642{col 40}{space 1}  -22.74{col 49}{space 3}0.000{col 57}{space 4}-.8462116{col 70}{space 3}-.7118983
+{txt}{space 2}Sixth decile  {c |}{col 17}{res}{space 2}-.9080488{col 29}{space 2} .0341194{col 40}{space 1}  -26.61{col 49}{space 3}0.000{col 57}{space 4}-.9749217{col 70}{space 3}-.8411759
+{txt}Seventh decile  {c |}{col 17}{res}{space 2}-1.103423{col 29}{space 2} .0345469{col 40}{space 1}  -31.94{col 49}{space 3}0.000{col 57}{space 4}-1.171133{col 70}{space 3}-1.035712
+{txt}{space 1}Eighth decile  {c |}{col 17}{res}{space 2}-1.190987{col 29}{space 2}  .034026{col 40}{space 1}  -35.00{col 49}{space 3}0.000{col 57}{space 4}-1.257677{col 70}{space 3}-1.124297
+{txt}{space 2}Ninth decile  {c |}{col 17}{res}{space 2}-1.276394{col 29}{space 2} .0339275{col 40}{space 1}  -37.62{col 49}{space 3}0.000{col 57}{space 4}-1.342891{col 70}{space 3}-1.209898
+{txt}Highest decile  {c |}{col 17}{res}{space 2}-1.065869{col 29}{space 2} .0329684{col 40}{space 1}  -32.33{col 49}{space 3}0.000{col 57}{space 4}-1.130486{col 70}{space 3}-1.001252
+{txt}{space 15} {c |}
+{space 10}invst {c |}{col 17}{res}{space 2}  .000018{col 29}{space 2} 1.01e-06{col 40}{space 1}   17.93{col 49}{space 3}0.000{col 57}{space 4} .0000161{col 70}{space 3}   .00002
+{txt}{space 10}_cons {c |}{col 17}{res}{space 2}-2.513958{col 29}{space 2} .0503824{col 40}{space 1}  -49.90{col 49}{space 3}0.000{col 57}{space 4}-2.612706{col 70}{space 3} -2.41521
+{txt}{hline 16}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. margin, dydx(coh2) atmeans
+{res}
+{txt}Conditional marginal effects{col 49}Number of obs{col 67}= {res}   224,083
+{txt}{col 1}Model VCE{col 14}: {res}Robust
+
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:Expression}:{space 1}{res:Pr(selfemp), predict()}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:dy/dx w.r.t.}:{space 1}{res:coh2}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:at}:{space 1}{res:{txt:educ1}{space 11}{txt:=} {space 3}.2342212 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ2}{space 11}{txt:=} {space 3}.3777484 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ3}{space 11}{txt:=} {space 3}.1832803 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ4}{space 11}{txt:=} {space 3}.1118023 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:age2}{space 12}{txt:=} {space 3}.3906454 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:age3}{space 12}{txt:=} {space 4}.310202 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:mar}{space 13}{txt:=} {space 3}.8011987 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:ysm}{space 13}{txt:=} {space 3}6.667891 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:hhsze}{space 11}{txt:=} {space 3}3.463444 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:coh2}{space 12}{txt:=} {space 3}.2777989 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:female}{space 10}{txt:=} {space 3}.4923756 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:int1}{space 12}{txt:=} {space 3}.1351419 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:pkid}{space 12}{txt:=} {space 3}.7244191 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:hloff}{space 11}{txt:=} {space 3}.8258681 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:prihm}{space 11}{txt:=} {space 3}.4631097 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:1.efdecile}{space 6}{txt:=} {space 3}.0539175 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:2.efdecile}{space 6}{txt:=} {space 3}.0565326 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:3.efdecile}{space 6}{txt:=} {space 3}.0755434 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:4.efdecile}{space 6}{txt:=} {space 3}.0857361 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:5.efdecile}{space 6}{txt:=} {space 3}.0953486 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:6.efdecile}{space 6}{txt:=} {space 3}.1053538 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:7.efdecile}{space 6}{txt:=} {space 3}.1141274 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:8.efdecile}{space 6}{txt:=} {space 3}.1268325 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:9.efdecile}{space 6}{txt:=} {space 4}.137333 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:10.efdecile}{space 5}{txt:=} {space 4}.149275 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:invst}{space 11}{txt:=} {space 3}1623.677 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+
+{res}{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26} Delta-method
+{col 14}{c |}      dy/dx{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 8}coh2 {c |}{col 14}{res}{space 2} -.029471{col 26}{space 2} .0018839{col 37}{space 1}  -15.64{col 46}{space 3}0.000{col 54}{space 4}-.0331634{col 67}{space 3}-.0257787
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. margin, dydx(int1) atmeans
+{res}
+{txt}Conditional marginal effects{col 49}Number of obs{col 67}= {res}   224,083
+{txt}{col 1}Model VCE{col 14}: {res}Robust
+
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:Expression}:{space 1}{res:Pr(selfemp), predict()}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:dy/dx w.r.t.}:{space 1}{res:int1}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:at}:{space 1}{res:{txt:educ1}{space 11}{txt:=} {space 3}.2342212 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ2}{space 11}{txt:=} {space 3}.3777484 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ3}{space 11}{txt:=} {space 3}.1832803 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ4}{space 11}{txt:=} {space 3}.1118023 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:age2}{space 12}{txt:=} {space 3}.3906454 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:age3}{space 12}{txt:=} {space 4}.310202 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:mar}{space 13}{txt:=} {space 3}.8011987 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:ysm}{space 13}{txt:=} {space 3}6.667891 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:hhsze}{space 11}{txt:=} {space 3}3.463444 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:coh2}{space 12}{txt:=} {space 3}.2777989 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:female}{space 10}{txt:=} {space 3}.4923756 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:int1}{space 12}{txt:=} {space 3}.1351419 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:pkid}{space 12}{txt:=} {space 3}.7244191 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:hloff}{space 11}{txt:=} {space 3}.8258681 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:prihm}{space 11}{txt:=} {space 3}.4631097 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:1.efdecile}{space 6}{txt:=} {space 3}.0539175 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:2.efdecile}{space 6}{txt:=} {space 3}.0565326 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:3.efdecile}{space 6}{txt:=} {space 3}.0755434 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:4.efdecile}{space 6}{txt:=} {space 3}.0857361 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:5.efdecile}{space 6}{txt:=} {space 3}.0953486 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:6.efdecile}{space 6}{txt:=} {space 3}.1053538 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:7.efdecile}{space 6}{txt:=} {space 3}.1141274 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:8.efdecile}{space 6}{txt:=} {space 3}.1268325 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:9.efdecile}{space 6}{txt:=} {space 4}.137333 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:10.efdecile}{space 5}{txt:=} {space 4}.149275 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:invst}{space 11}{txt:=} {space 3}1623.677 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+
+{res}{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26} Delta-method
+{col 14}{c |}      dy/dx{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 8}int1 {c |}{col 14}{res}{space 2}-.0104382{col 26}{space 2} .0026498{col 37}{space 1}   -3.94{col 46}{space 3}0.000{col 54}{space 4}-.0156317{col 67}{space 3}-.0052447
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. logit se_inc educ1 educ2 educ3 educ4 age2 age3 mar ysm hhsze coh2 female int1 pkid hloff prihm i.efdecile invst, r
+
+{res}{txt}Iteration 0:{space 3}log pseudolikelihood = {res:-38275.186}  
+Iteration 1:{space 3}log pseudolikelihood = {res:-37617.776}  
+Iteration 2:{space 3}log pseudolikelihood = {res:-37232.779}  
+Iteration 3:{space 3}log pseudolikelihood = {res:-35086.997}  
+Iteration 4:{space 3}log pseudolikelihood = {res:-34855.218}  
+Iteration 5:{space 3}log pseudolikelihood = {res:-34841.216}  
+Iteration 6:{space 3}log pseudolikelihood = {res:-34841.181}  
+Iteration 7:{space 3}log pseudolikelihood = {res:-34841.181}  
+{res}
+{txt}Logistic regression{col 49}Number of obs{col 67}= {res}   224,083
+{txt}{col 49}Wald chi2({res}25{txt}){col 67}= {res}   4544.96
+{txt}{col 49}Prob > chi2{col 67}= {res}    0.0000
+{txt}Log pseudolikelihood = {res}-34841.181{txt}{col 49}Pseudo R2{col 67}= {res}    0.0897
+
+{txt}{hline 16}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 17}{c |}{col 29}    Robust
+{col 1}         se_inc{col 17}{c |}      Coef.{col 29}   Std. Err.{col 41}      z{col 49}   P>|z|{col 57}     [95% Con{col 70}f. Interval]
+{hline 16}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 10}educ1 {c |}{col 17}{res}{space 2} .0835349{col 29}{space 2} .0427405{col 40}{space 1}    1.95{col 49}{space 3}0.051{col 57}{space 4} -.000235{col 70}{space 3} .1673048
+{txt}{space 10}educ2 {c |}{col 17}{res}{space 2} .0473284{col 29}{space 2}  .040495{col 40}{space 1}    1.17{col 49}{space 3}0.243{col 57}{space 4}-.0320404{col 70}{space 3} .1266972
+{txt}{space 10}educ3 {c |}{col 17}{res}{space 2} .1337911{col 29}{space 2} .0458201{col 40}{space 1}    2.92{col 49}{space 3}0.004{col 57}{space 4} .0439853{col 70}{space 3} .2235969
+{txt}{space 10}educ4 {c |}{col 17}{res}{space 2}  .253948{col 29}{space 2} .0477317{col 40}{space 1}    5.32{col 49}{space 3}0.000{col 57}{space 4} .1603954{col 70}{space 3} .3475005
+{txt}{space 11}age2 {c |}{col 17}{res}{space 2} .7448844{col 29}{space 2} .0391444{col 40}{space 1}   19.03{col 49}{space 3}0.000{col 57}{space 4} .6681628{col 70}{space 3} .8216059
+{txt}{space 11}age3 {c |}{col 17}{res}{space 2} .9583351{col 29}{space 2} .0402406{col 40}{space 1}   23.82{col 49}{space 3}0.000{col 57}{space 4}  .879465{col 70}{space 3} 1.037205
+{txt}{space 12}mar {c |}{col 17}{res}{space 2}  1.01059{col 29}{space 2} .0520539{col 40}{space 1}   19.41{col 49}{space 3}0.000{col 57}{space 4} .9085662{col 70}{space 3} 1.112614
+{txt}{space 12}ysm {c |}{col 17}{res}{space 2} .0100915{col 29}{space 2} .0008427{col 40}{space 1}   11.98{col 49}{space 3}0.000{col 57}{space 4} .0084399{col 70}{space 3} .0117432
+{txt}{space 10}hhsze {c |}{col 17}{res}{space 2} .0179135{col 29}{space 2} .0112752{col 40}{space 1}    1.59{col 49}{space 3}0.112{col 57}{space 4}-.0041855{col 70}{space 3} .0400125
+{txt}{space 11}coh2 {c |}{col 17}{res}{space 2}-.2590272{col 29}{space 2} .0351165{col 40}{space 1}   -7.38{col 49}{space 3}0.000{col 57}{space 4}-.3278542{col 70}{space 3}-.1902003
+{txt}{space 9}female {c |}{col 17}{res}{space 2}-.9146733{col 29}{space 2}  .030895{col 40}{space 1}  -29.61{col 49}{space 3}0.000{col 57}{space 4}-.9752263{col 70}{space 3}-.8541204
+{txt}{space 11}int1 {c |}{col 17}{res}{space 2} .0784293{col 29}{space 2} .0544451{col 40}{space 1}    1.44{col 49}{space 3}0.150{col 57}{space 4}-.0282812{col 70}{space 3} .1851397
+{txt}{space 11}pkid {c |}{col 17}{res}{space 2} .0846714{col 29}{space 2} .0313834{col 40}{space 1}    2.70{col 49}{space 3}0.007{col 57}{space 4} .0231612{col 70}{space 3} .1461817
+{txt}{space 10}hloff {c |}{col 17}{res}{space 2}-.0513336{col 29}{space 2} .0336705{col 40}{space 1}   -1.52{col 49}{space 3}0.127{col 57}{space 4}-.1173266{col 70}{space 3} .0146594
+{txt}{space 10}prihm {c |}{col 17}{res}{space 2} .0807803{col 29}{space 2} .0260463{col 40}{space 1}    3.10{col 49}{space 3}0.002{col 57}{space 4} .0297305{col 70}{space 3} .1318301
+{txt}{space 15} {c |}
+{space 7}efdecile {c |}
+{space 1}Second decile  {c |}{col 17}{res}{space 2} .1761014{col 29}{space 2} .0580183{col 40}{space 1}    3.04{col 49}{space 3}0.002{col 57}{space 4} .0623876{col 70}{space 3} .2898152
+{txt}{space 2}Third decile  {c |}{col 17}{res}{space 2}-.1547771{col 29}{space 2} .0575797{col 40}{space 1}   -2.69{col 49}{space 3}0.007{col 57}{space 4}-.2676313{col 70}{space 3}-.0419229
+{txt}{space 1}Fourth decile  {c |}{col 17}{res}{space 2}-.3093543{col 29}{space 2} .0574283{col 40}{space 1}   -5.39{col 49}{space 3}0.000{col 57}{space 4}-.4219118{col 70}{space 3}-.1967968
+{txt}{space 2}Fifth decile  {c |}{col 17}{res}{space 2}-.4873039{col 29}{space 2} .0578119{col 40}{space 1}   -8.43{col 49}{space 3}0.000{col 57}{space 4}-.6006132{col 70}{space 3}-.3739946
+{txt}{space 2}Sixth decile  {c |}{col 17}{res}{space 2}-.5219962{col 29}{space 2} .0568218{col 40}{space 1}   -9.19{col 49}{space 3}0.000{col 57}{space 4}-.6333649{col 70}{space 3}-.4106275
+{txt}Seventh decile  {c |}{col 17}{res}{space 2}-.6016296{col 29}{space 2} .0564158{col 40}{space 1}  -10.66{col 49}{space 3}0.000{col 57}{space 4}-.7122026{col 70}{space 3}-.4910566
+{txt}{space 1}Eighth decile  {c |}{col 17}{res}{space 2}-.5630447{col 29}{space 2} .0545705{col 40}{space 1}  -10.32{col 49}{space 3}0.000{col 57}{space 4}-.6700008{col 70}{space 3}-.4560885
+{txt}{space 2}Ninth decile  {c |}{col 17}{res}{space 2}-.5505361{col 29}{space 2} .0537083{col 40}{space 1}  -10.25{col 49}{space 3}0.000{col 57}{space 4}-.6558025{col 70}{space 3}-.4452697
+{txt}Highest decile  {c |}{col 17}{res}{space 2}-.2645051{col 29}{space 2} .0520675{col 40}{space 1}   -5.08{col 49}{space 3}0.000{col 57}{space 4}-.3665555{col 70}{space 3}-.1624547
+{txt}{space 15} {c |}
+{space 10}invst {c |}{col 17}{res}{space 2}  .000017{col 29}{space 2} 9.46e-07{col 40}{space 1}   17.92{col 49}{space 3}0.000{col 57}{space 4} .0000151{col 70}{space 3} .0000188
+{txt}{space 10}_cons {c |}{col 17}{res}{space 2}-4.309726{col 29}{space 2} .0838666{col 40}{space 1}  -51.39{col 49}{space 3}0.000{col 57}{space 4}-4.474102{col 70}{space 3}-4.145351
+{txt}{hline 16}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. margin, dydx(coh2) atmeans
+{res}
+{txt}Conditional marginal effects{col 49}Number of obs{col 67}= {res}   224,083
+{txt}{col 1}Model VCE{col 14}: {res}Robust
+
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:Expression}:{space 1}{res:Pr(se_inc), predict()}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:dy/dx w.r.t.}:{space 1}{res:coh2}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:at}:{space 1}{res:{txt:educ1}{space 11}{txt:=} {space 3}.2342212 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ2}{space 11}{txt:=} {space 3}.3777484 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ3}{space 11}{txt:=} {space 3}.1832803 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ4}{space 11}{txt:=} {space 3}.1118023 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:age2}{space 12}{txt:=} {space 3}.3906454 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:age3}{space 12}{txt:=} {space 4}.310202 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:mar}{space 13}{txt:=} {space 3}.8011987 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:ysm}{space 13}{txt:=} {space 3}6.667891 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:hhsze}{space 11}{txt:=} {space 3}3.463444 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:coh2}{space 12}{txt:=} {space 3}.2777989 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:female}{space 10}{txt:=} {space 3}.4923756 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:int1}{space 12}{txt:=} {space 3}.1351419 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:pkid}{space 12}{txt:=} {space 3}.7244191 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:hloff}{space 11}{txt:=} {space 3}.8258681 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:prihm}{space 11}{txt:=} {space 3}.4631097 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:1.efdecile}{space 6}{txt:=} {space 3}.0539175 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:2.efdecile}{space 6}{txt:=} {space 3}.0565326 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:3.efdecile}{space 6}{txt:=} {space 3}.0755434 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:4.efdecile}{space 6}{txt:=} {space 3}.0857361 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:5.efdecile}{space 6}{txt:=} {space 3}.0953486 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:6.efdecile}{space 6}{txt:=} {space 3}.1053538 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:7.efdecile}{space 6}{txt:=} {space 3}.1141274 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:8.efdecile}{space 6}{txt:=} {space 3}.1268325 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:9.efdecile}{space 6}{txt:=} {space 4}.137333 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:10.efdecile}{space 5}{txt:=} {space 4}.149275 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:invst}{space 11}{txt:=} {space 3}1623.677 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+
+{res}{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26} Delta-method
+{col 14}{c |}      dy/dx{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 8}coh2 {c |}{col 14}{res}{space 2}-.0073368{col 26}{space 2}  .000994{col 37}{space 1}   -7.38{col 46}{space 3}0.000{col 54}{space 4}-.0092849{col 67}{space 3}-.0053886
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. margin, dydx(int1) atmeans
+{res}
+{txt}Conditional marginal effects{col 49}Number of obs{col 67}= {res}   224,083
+{txt}{col 1}Model VCE{col 14}: {res}Robust
+
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:Expression}:{space 1}{res:Pr(se_inc), predict()}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:dy/dx w.r.t.}:{space 1}{res:int1}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:at}:{space 1}{res:{txt:educ1}{space 11}{txt:=} {space 3}.2342212 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ2}{space 11}{txt:=} {space 3}.3777484 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ3}{space 11}{txt:=} {space 3}.1832803 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ4}{space 11}{txt:=} {space 3}.1118023 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:age2}{space 12}{txt:=} {space 3}.3906454 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:age3}{space 12}{txt:=} {space 4}.310202 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:mar}{space 13}{txt:=} {space 3}.8011987 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:ysm}{space 13}{txt:=} {space 3}6.667891 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:hhsze}{space 11}{txt:=} {space 3}3.463444 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:coh2}{space 12}{txt:=} {space 3}.2777989 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:female}{space 10}{txt:=} {space 3}.4923756 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:int1}{space 12}{txt:=} {space 3}.1351419 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:pkid}{space 12}{txt:=} {space 3}.7244191 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:hloff}{space 11}{txt:=} {space 3}.8258681 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:prihm}{space 11}{txt:=} {space 3}.4631097 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:1.efdecile}{space 6}{txt:=} {space 3}.0539175 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:2.efdecile}{space 6}{txt:=} {space 3}.0565326 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:3.efdecile}{space 6}{txt:=} {space 3}.0755434 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:4.efdecile}{space 6}{txt:=} {space 3}.0857361 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:5.efdecile}{space 6}{txt:=} {space 3}.0953486 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:6.efdecile}{space 6}{txt:=} {space 3}.1053538 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:7.efdecile}{space 6}{txt:=} {space 3}.1141274 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:8.efdecile}{space 6}{txt:=} {space 3}.1268325 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:9.efdecile}{space 6}{txt:=} {space 4}.137333 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:10.efdecile}{space 5}{txt:=} {space 4}.149275 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:invst}{space 11}{txt:=} {space 3}1623.677 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+
+{res}{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26} Delta-method
+{col 14}{c |}      dy/dx{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 8}int1 {c |}{col 14}{res}{space 2} .0022215{col 26}{space 2} .0015419{col 37}{space 1}    1.44{col 46}{space 3}0.150{col 54}{space 4}-.0008006{col 67}{space 3} .0052435
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. *-0.0051153       
+. 
+. logit se_uninc educ1 educ2 educ3 educ4 age2 age3 mar ysm hhsze coh2 female int1 pkid hloff prihm i.efdecile invst, r 
+
+{res}{txt}Iteration 0:{space 3}log pseudolikelihood = {res: -52804.37}  
+Iteration 1:{space 3}log pseudolikelihood = {res:-50266.902}  
+Iteration 2:{space 3}log pseudolikelihood = {res: -49854.45}  
+Iteration 3:{space 3}log pseudolikelihood = {res:-49853.699}  
+Iteration 4:{space 3}log pseudolikelihood = {res:-49853.699}  
+{res}
+{txt}Logistic regression{col 49}Number of obs{col 67}= {res}   224,083
+{txt}{col 49}Wald chi2({res}25{txt}){col 67}= {res}   5495.07
+{txt}{col 49}Prob > chi2{col 67}= {res}    0.0000
+{txt}Log pseudolikelihood = {res}-49853.699{txt}{col 49}Pseudo R2{col 67}= {res}    0.0559
+
+{txt}{hline 16}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 17}{c |}{col 29}    Robust
+{col 1}       se_uninc{col 17}{c |}      Coef.{col 29}   Std. Err.{col 41}      z{col 49}   P>|z|{col 57}     [95% Con{col 70}f. Interval]
+{hline 16}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 10}educ1 {c |}{col 17}{res}{space 2} .0282354{col 29}{space 2} .0334306{col 40}{space 1}    0.84{col 49}{space 3}0.398{col 57}{space 4}-.0372874{col 70}{space 3} .0937581
+{txt}{space 10}educ2 {c |}{col 17}{res}{space 2} .1541302{col 29}{space 2} .0312465{col 40}{space 1}    4.93{col 49}{space 3}0.000{col 57}{space 4} .0928882{col 70}{space 3} .2153723
+{txt}{space 10}educ3 {c |}{col 17}{res}{space 2} .2119719{col 29}{space 2} .0362251{col 40}{space 1}    5.85{col 49}{space 3}0.000{col 57}{space 4}  .140972{col 70}{space 3} .2829717
+{txt}{space 10}educ4 {c |}{col 17}{res}{space 2}  .373624{col 29}{space 2}  .038343{col 40}{space 1}    9.74{col 49}{space 3}0.000{col 57}{space 4} .2984731{col 70}{space 3} .4487749
+{txt}{space 11}age2 {c |}{col 17}{res}{space 2} .5659945{col 29}{space 2}  .027352{col 40}{space 1}   20.69{col 49}{space 3}0.000{col 57}{space 4} .5123856{col 70}{space 3} .6196035
+{txt}{space 11}age3 {c |}{col 17}{res}{space 2} .9413821{col 29}{space 2} .0281798{col 40}{space 1}   33.41{col 49}{space 3}0.000{col 57}{space 4} .8861506{col 70}{space 3} .9966135
+{txt}{space 12}mar {c |}{col 17}{res}{space 2} .4789765{col 29}{space 2} .0311335{col 40}{space 1}   15.38{col 49}{space 3}0.000{col 57}{space 4} .4179559{col 70}{space 3}  .539997
+{txt}{space 12}ysm {c |}{col 17}{res}{space 2} .0080286{col 29}{space 2} .0007182{col 40}{space 1}   11.18{col 49}{space 3}0.000{col 57}{space 4} .0066211{col 70}{space 3} .0094362
+{txt}{space 10}hhsze {c |}{col 17}{res}{space 2} .0136334{col 29}{space 2} .0092978{col 40}{space 1}    1.47{col 49}{space 3}0.143{col 57}{space 4}-.0045901{col 70}{space 3} .0318568
+{txt}{space 11}coh2 {c |}{col 17}{res}{space 2}-.4072101{col 29}{space 2} .0305182{col 40}{space 1}  -13.34{col 49}{space 3}0.000{col 57}{space 4}-.4670246{col 70}{space 3}-.3473956
+{txt}{space 9}female {c |}{col 17}{res}{space 2} -.261998{col 29}{space 2} .0220205{col 40}{space 1}  -11.90{col 49}{space 3}0.000{col 57}{space 4}-.3051573{col 70}{space 3}-.2188387
+{txt}{space 11}int1 {c |}{col 17}{res}{space 2}-.2191553{col 29}{space 2}  .041831{col 40}{space 1}   -5.24{col 49}{space 3}0.000{col 57}{space 4}-.3011425{col 70}{space 3}-.1371681
+{txt}{space 11}pkid {c |}{col 17}{res}{space 2}-.0330481{col 29}{space 2} .0260397{col 40}{space 1}   -1.27{col 49}{space 3}0.204{col 57}{space 4} -.084085{col 70}{space 3} .0179887
+{txt}{space 10}hloff {c |}{col 17}{res}{space 2} .0059665{col 29}{space 2} .0275218{col 40}{space 1}    0.22{col 49}{space 3}0.828{col 57}{space 4}-.0479753{col 70}{space 3} .0599082
+{txt}{space 10}prihm {c |}{col 17}{res}{space 2}-.1254876{col 29}{space 2} .0199317{col 40}{space 1}   -6.30{col 49}{space 3}0.000{col 57}{space 4} -.164553{col 70}{space 3}-.0864222
+{txt}{space 15} {c |}
+{space 7}efdecile {c |}
+{space 1}Second decile  {c |}{col 17}{res}{space 2} .0801489{col 29}{space 2} .0392115{col 40}{space 1}    2.04{col 49}{space 3}0.041{col 57}{space 4} .0032958{col 70}{space 3}  .157002
+{txt}{space 2}Third decile  {c |}{col 17}{res}{space 2}-.2981724{col 29}{space 2}  .038766{col 40}{space 1}   -7.69{col 49}{space 3}0.000{col 57}{space 4}-.3741524{col 70}{space 3}-.2221925
+{txt}{space 1}Fourth decile  {c |}{col 17}{res}{space 2}-.5567536{col 29}{space 2}  .039157{col 40}{space 1}  -14.22{col 49}{space 3}0.000{col 57}{space 4}-.6334999{col 70}{space 3}-.4800073
+{txt}{space 2}Fifth decile  {c |}{col 17}{res}{space 2}-.8190724{col 29}{space 2} .0399176{col 40}{space 1}  -20.52{col 49}{space 3}0.000{col 57}{space 4}-.8973094{col 70}{space 3}-.7408354
+{txt}{space 2}Sixth decile  {c |}{col 17}{res}{space 2}-.9885362{col 29}{space 2}  .040155{col 40}{space 1}  -24.62{col 49}{space 3}0.000{col 57}{space 4}-1.067239{col 70}{space 3}-.9098338
+{txt}Seventh decile  {c |}{col 17}{res}{space 2}-1.235361{col 29}{space 2} .0413557{col 40}{space 1}  -29.87{col 49}{space 3}0.000{col 57}{space 4}-1.316417{col 70}{space 3}-1.154306
+{txt}{space 1}Eighth decile  {c |}{col 17}{res}{space 2}-1.400105{col 29}{space 2}  .041459{col 40}{space 1}  -33.77{col 49}{space 3}0.000{col 57}{space 4}-1.481364{col 70}{space 3}-1.318847
+{txt}{space 2}Ninth decile  {c |}{col 17}{res}{space 2}-1.550399{col 29}{space 2} .0419248{col 40}{space 1}  -36.98{col 49}{space 3}0.000{col 57}{space 4} -1.63257{col 70}{space 3}-1.468228
+{txt}Highest decile  {c |}{col 17}{res}{space 2}-1.393505{col 29}{space 2} .0396164{col 40}{space 1}  -35.17{col 49}{space 3}0.000{col 57}{space 4}-1.471151{col 70}{space 3}-1.315858
+{txt}{space 15} {c |}
+{space 10}invst {c |}{col 17}{res}{space 2} 4.64e-06{col 29}{space 2} 4.01e-07{col 40}{space 1}   11.58{col 49}{space 3}0.000{col 57}{space 4} 3.86e-06{col 70}{space 3} 5.43e-06
+{txt}{space 10}_cons {c |}{col 17}{res}{space 2}-2.709336{col 29}{space 2} .0605027{col 40}{space 1}  -44.78{col 49}{space 3}0.000{col 57}{space 4}-2.827919{col 70}{space 3}-2.590753
+{txt}{hline 16}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. margin, dydx(coh2) atmeans
+{res}
+{txt}Conditional marginal effects{col 49}Number of obs{col 67}= {res}   224,083
+{txt}{col 1}Model VCE{col 14}: {res}Robust
+
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:Expression}:{space 1}{res:Pr(se_uninc), predict()}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:dy/dx w.r.t.}:{space 1}{res:coh2}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:at}:{space 1}{res:{txt:educ1}{space 11}{txt:=} {space 3}.2342212 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ2}{space 11}{txt:=} {space 3}.3777484 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ3}{space 11}{txt:=} {space 3}.1832803 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ4}{space 11}{txt:=} {space 3}.1118023 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:age2}{space 12}{txt:=} {space 3}.3906454 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:age3}{space 12}{txt:=} {space 4}.310202 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:mar}{space 13}{txt:=} {space 3}.8011987 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:ysm}{space 13}{txt:=} {space 3}6.667891 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:hhsze}{space 11}{txt:=} {space 3}3.463444 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:coh2}{space 12}{txt:=} {space 3}.2777989 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:female}{space 10}{txt:=} {space 3}.4923756 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:int1}{space 12}{txt:=} {space 3}.1351419 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:pkid}{space 12}{txt:=} {space 3}.7244191 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:hloff}{space 11}{txt:=} {space 3}.8258681 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:prihm}{space 11}{txt:=} {space 3}.4631097 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:1.efdecile}{space 6}{txt:=} {space 3}.0539175 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:2.efdecile}{space 6}{txt:=} {space 3}.0565326 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:3.efdecile}{space 6}{txt:=} {space 3}.0755434 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:4.efdecile}{space 6}{txt:=} {space 3}.0857361 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:5.efdecile}{space 6}{txt:=} {space 3}.0953486 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:6.efdecile}{space 6}{txt:=} {space 3}.1053538 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:7.efdecile}{space 6}{txt:=} {space 3}.1141274 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:8.efdecile}{space 6}{txt:=} {space 3}.1268325 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:9.efdecile}{space 6}{txt:=} {space 4}.137333 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:10.efdecile}{space 5}{txt:=} {space 4}.149275 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:invst}{space 11}{txt:=} {space 3}1623.677 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+
+{res}{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26} Delta-method
+{col 14}{c |}      dy/dx{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 8}coh2 {c |}{col 14}{res}{space 2}-.0202193{col 26}{space 2} .0015109{col 37}{space 1}  -13.38{col 46}{space 3}0.000{col 54}{space 4}-.0231805{col 67}{space 3} -.017258
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. margin, dydx(int1) atmeans
+{res}
+{txt}Conditional marginal effects{col 49}Number of obs{col 67}= {res}   224,083
+{txt}{col 1}Model VCE{col 14}: {res}Robust
+
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:Expression}:{space 1}{res:Pr(se_uninc), predict()}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:dy/dx w.r.t.}:{space 1}{res:int1}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col:at}:{space 1}{res:{txt:educ1}{space 11}{txt:=} {space 3}.2342212 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ2}{space 11}{txt:=} {space 3}.3777484 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ3}{space 11}{txt:=} {space 3}.1832803 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:educ4}{space 11}{txt:=} {space 3}.1118023 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:age2}{space 12}{txt:=} {space 3}.3906454 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:age3}{space 12}{txt:=} {space 4}.310202 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:mar}{space 13}{txt:=} {space 3}.8011987 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:ysm}{space 13}{txt:=} {space 3}6.667891 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:hhsze}{space 11}{txt:=} {space 3}3.463444 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:coh2}{space 12}{txt:=} {space 3}.2777989 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:female}{space 10}{txt:=} {space 3}.4923756 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:int1}{space 12}{txt:=} {space 3}.1351419 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:pkid}{space 12}{txt:=} {space 3}.7244191 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:hloff}{space 11}{txt:=} {space 3}.8258681 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:prihm}{space 11}{txt:=} {space 3}.4631097 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:1.efdecile}{space 6}{txt:=} {space 3}.0539175 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:2.efdecile}{space 6}{txt:=} {space 3}.0565326 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:3.efdecile}{space 6}{txt:=} {space 3}.0755434 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:4.efdecile}{space 6}{txt:=} {space 3}.0857361 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:5.efdecile}{space 6}{txt:=} {space 3}.0953486 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:6.efdecile}{space 6}{txt:=} {space 3}.1053538 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:7.efdecile}{space 6}{txt:=} {space 3}.1141274 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:8.efdecile}{space 6}{txt:=} {space 3}.1268325 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:9.efdecile}{space 6}{txt:=} {space 4}.137333 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:10.efdecile}{space 5}{txt:=} {space 4}.149275 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+{txt}{p2colset 1 14 16 2}{...}
+{p2col: }{space 2}{res:{txt:invst}{space 11}{txt:=} {space 3}1623.677 {txt:(mean)}}{p_end}
+{p2colreset}{...}
+
+{res}{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26} Delta-method
+{col 14}{c |}      dy/dx{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 8}int1 {c |}{col 14}{res}{space 2}-.0108817{col 26}{space 2} .0020751{col 37}{space 1}   -5.24{col 46}{space 3}0.000{col 54}{space 4}-.0149488{col 67}{space 3}-.0068147
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. *-0.031101
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+{txt}end of do-file
+
+{com}. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\paul\Desktop\eco340\Minho_Atakan_ECO340_TERMPAPER.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res} 3 Apr 2020, 00:05:59
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}
