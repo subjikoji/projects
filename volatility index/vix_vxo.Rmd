@@ -1,0 +1,189 @@
+---
+title: "Analysis and Comparison of VIX and VXO Evolutions"
+author: "Min Ho Kim"
+date: "2022-10-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("C:\\Users\\pmhk\\Desktop\\job market\\projects")
+library(tidyverse)
+library(ggplot2)
+library(car)
+library(moments)
+library(dplyr)
+```
+
+## Introduction
+
+Value of an option contract depends on many things, including volatility ($\sigma$). Implied volatility is the value of volatility that can be derived given an option-pricing models. Mathematically, if $V = f(\sigma, \boldsymbol{\theta})$ is the value of an option contract and $f$ is the option pricing methodology, then assuming there exists an inverse of $f$ such that $f^{-1}(.) = g(.)$ then implied volatility is $\hat{\sigma} = g(V, \boldsymbol{\theta})$; and thus $\hat{\sigma}$ is the volatility that is implied by the value of the underlying option contract. Essentially, implied volatility is the volatility that equates the value of an option pricing model to the option market quote. 
+
+Chicago Board Options Exchange (CBOE) is the world's largest options exchange based in Chicago, and facilitates the trade of options, futures, and other financial derivatives. VIX is the volatility index produced by the CBOE since 1993 and it aims to measure the 30-day expected volatility of the stock market in the United States. In doing so, it uses the prices of S&P500 index call and put options to derive the implied volatility described above. VXO is the old VIX, where it benchmarks the S&P100 index (OEX), and has been replaced by the VIX since 2004. Also, the VIX is calculated using market prices whereas VXO is based on the averages implied volatilitiy derived from Black-Schole priced options. It is important to note that the direction of the VIX does not necessarily reflect the direction of the market movement.
+
+```{r}
+#calling data
+vxo <- read.csv("vxocurrent.csv", h=T)
+vix <- read.csv("VIX_History.csv", h=T)
+vix <- vix[3529:nrow(vix),] 
+vix$DATE <- as.Date(vix$DATE, "%m/%d/%Y")
+vxo$Date <- as.Date(vxo$Date,"%m/%d/%Y")
+vxo <- na.omit(vxo)
+vix <- na.omit(vix)
+```
+
+Below we present the evolution of VIX and VXO, respectively, from 2004 to most recently update data (2021 for VXO, 2022 for VIX). While there are small differences in magnitude (measure) between the two volatility indices, we can see that the two series do not significantly differ in terms of their overall evolution. The difference in magnitude is likely arising from the fact the two indicies use different market benchmarks and different methods in deriving implied volatility. We observe greatest spikes in volatility measures during the financial crisis of 2008 and during the global spread of COVID-19 in first half of 2020, correctly reflecting the hazardous market conditions during those two time periods. 
+
+```{r}
+vix_plot <- ggplot(vix, aes(x=DATE, y=CLOSE)) +
+  geom_line() + 
+  labs(title = "VIX", x="Year", y="Closing")
+
+ 
+vxo_plot <- ggplot(vxo, aes(x=Date, y=Close)) +
+  geom_line() + 
+  labs(title = "VXO", x="Year", y="Closing")
+
+par(mfrow=c(2,1))
+vix_plot
+vxo_plot
+```
+
+Below we present the summary statistics of the historical distributions of VIX and VXO, and verify whether the distributions follow a normal distribution using the Q-Q plot. 
+
+We can see that both distributions are heavily right-skewed and non-symmetric, with skewness of around 2.5 and 2.7, and kurtosis of 12 and and 13.5 for VIX and VXO respectively. A table of the sample moments for VIX and VXO is printed below the histograms. Note that the variance of the VXO is higher compared to the variance of VIX, perhaps due to the fact that 400 more companies are used to calculated VIX.
+
+From the plot and sample moments, we can infer that the data are not normally distributed. This is verified using the Q-Q plot; we can see serious deviations from the theoretical quantiles. But once we take the log of the series and plot them against theoretical quantiles, we can see that they lie are much closer to the Q-Q line. This indicates that the data more closely follow a lognormal distribution. 
+
+```{r}
+#historical distributions 
+hist(vix$CLOSE, xlab="Closing", main="Histogram of VIX")
+hist(vxo$Close, xlab="Closing", main="Histogram of VXO")
+
+#Calculating summary statistics
+vix_stats <- c(mean(vix$CLOSE), var(vix$CLOSE), skewness(vix$CLOSE), kurtosis(vix$CLOSE))
+vxo_stats <- c(mean(vxo$Close, na.rm=T), var(vxo$Close, na.rm=T), 
+               skewness(vxo$Close, na.rm=T), kurtosis(vxo$Close, na.rm=T))
+
+stats_table <-rbind(vix_stats, vxo_stats)
+stats <- c("mean", "variance", "skewness", "kurtosis")
+colnames(stats_table) <- stats
+stats_table %>% print()
+
+#QQplots 
+par(mfrow=c(1,2))
+qqPlot(vix$CLOSE, ylab = "Sample", main="Q-Q Plot of VIX")
+qqPlot(vxo$Close, ylab= "Sample",  main="Q-Q Plot of VXO")
+
+qqPlot(log(vix$CLOSE), ylab = "Sample", main="Q-Q Plot of log(VIX)")
+qqPlot(log(vxo$Close), ylab= "Sample",  main="Q-Q Plot of log(VXO)")
+```
+For time series analysis and forecasting, rolling window can be helpful to analyze non-stationary stochastic process and can also be used to assess model stability. Below we construct a 2-year rolling window and compute the rolling mean, variance and Value at Risk at 25% and 75%, for both VIX and VXO. 
+
+```{r}
+#First create year-month label for each observation
+label_vxo <-c()
+for (i in 1:nrow(vxo)){
+  k<- format(vxo[i,1], "%Y/%m")
+  label_vxo <- c(label_vxo, k)
+}
+
+label_vix <-c()
+for (i in 1:nrow(vix)){
+  k<- format(vix[i,1], "%Y/%m")
+  label_vix <- c(label_vix, k)
+}
+
+
+#Then create a numeric index corresponding to year-month lable for each observation 
+vxo <- mutate(vxo, month_ID = as.numeric(as.factor(label_vxo)))
+vix <- mutate(vix, month_ID = as.numeric(as.factor(label_vix)))
+vxo_id <- length(unique(label_vxo))
+vix_id <- length(unique(label_vix))
+
+#calculate rolling statistics for vox
+rmean_vxo <- c()
+rvar_vxo <- c()
+VaR_25_vxo <- c()
+VaR_75_vxo <- c()
+t=24
+while(t<=vxo_id){
+  window <- c()
+  for(i in 1:nrow(vxo)){
+    if(t-23<= vxo$month_ID[i] &  vxo$month_ID[i]<=t){
+      window <- c(window, vxo$Close[i])
+    }
+  }
+  rmean_vxo <- c(rmean_vxo, mean(window))
+  rvar_vxo <- c(rvar_vxo, var(window))
+  VaR_25_vxo <- c(VaR_25_vxo, quantile(window, 0.25))
+  VaR_75_vxo <- c(VaR_75_vxo, quantile(window, 0.75))
+  t=t+1
+}
+
+#calculate rolling statistics for vix
+rmean_vix <- c()
+rvar_vix <- c()
+VaR_25_vix <- c()
+VaR_75_vix <- c()
+t=24
+while(t<=vix_id){
+  window <- c()
+  for(i in 1:nrow(vix)){
+    if(t-23<= vix$month_ID[i] &  vix$month_ID[i]<=t){
+      window <- c(window, vix$CLOSE[i])
+    }
+  }
+  rmean_vix <- c(rmean_vix, mean(window))
+  rvar_vix <- c(rvar_vix, var(window))
+  VaR_25_vix <- c(VaR_25_vix, quantile(window, 0.25))
+  VaR_75_vix <- c(VaR_75_vix, quantile(window, 0.75))
+  
+  t=t+1
+}
+
+rvix <- data.frame(rmean_vix, rvar_vix, VaR_25_vix, VaR_75_vix)
+rvxo <- data.frame(rmean_vxo, rvar_vxo, VaR_25_vxo, VaR_75_vxo)
+
+#List starting few values from the rolling window 
+head(rvix)
+head(rvxo)
+
+```
+
+From the plots below, we can observe that the evolutions of the relevant rolling statistics of the two indices are very similar. In particular, as we have seen in the time series plot above, we again observe big increases in volatility (and its volatility) during times of financial crises.
+
+VIX futures can be traded through the Chicago Board Options Exchange. This provides opportunity for investors to profit from the movements of the volatility index. Consequently, the variance of a volatility index becomes an important analysis factor, and future contract prices will readily be reflected by the variance of VIX/VXO. We have noticed that VIX/VXO tend to show greatest upside movements in the presence of extreme bear markets (2008, 2020). Thus, for example, an investor may hedge their loss by purchasing volatility futures, thereby gaining exposure to profits from volatile market movements. Thus this creates a market for volatility of the volatility, namely the VIX futures market and other relevant volatility derivatives markets. 
+
+```{r}
+#Graphs
+par(mfrow=c(2,2))
+ts.plot(rmean_vxo, main="Rolling Mean of VXO")
+ts.plot(rvar_vxo, main="Rolling Variance of VXO")
+ts.plot(VaR_25_vxo, main="Rolling VaR(25%) of VXO")
+ts.plot(VaR_75_vxo, main="Rolling VaR(75%) of VXO")
+
+ts.plot(rmean_vix, main="Rolling Mean of VIX")
+ts.plot(rvar_vix, main="Rolling Variance of VIX")
+ts.plot(VaR_25_vix, main="Rolling VaR(25%) of VIX")
+ts.plot(VaR_75_vix, main="Rolling VaR(75%) of VIX")
+
+```
+
+There seem to be few economical reasons for the switch in methodology. According to [Carr and Wu (2006, The Journal of Derivatives)](https://faculty.baruch.cuny.edu/lwu/papers/vix.pdf), one of the primary reasons lie within the interpration of the two measures. The current VIX provides an economical interpretation as the "...price of linear portfolio of options". As we have described mathematically above, the implied volatility computed to construct VXO is just some transformation of option prices and fails to provide any further economic interpretation. Furthermore, they claim that the VXO methodology creates "...an artificial upward bias". This can be inferred from our discussion of the difference in the magnitude of the two series; the variance of VXO is somewhat larger than that of VIX (98.1 vs 80.5).
+Also, as mentioned above, the VIX incorporates more firms (S&P 500) and thus captures a better picture of the overall market volatility, compared to the VXO methodology which only uses top 100 firms in S&P 500 in its calculation. 
+
+That said, VIX is still just an estimate for market volatility, as is the VXO. VXO may still provide useful information for investors in regards to the volatility of the market, and investors will utilize any relevant information to profit from. The restriction to 100 top firms could still be useful when investment decisions solely revolve around top large-cap firms in the S&P100 index. 
+
+Below is the evolution of VIX after restricting the data to begin few months before 2020. The huge spike between Q1 and Q2 of 2020 reflects the market volatility during the first few months of the global spread of COVID-19. Ex post, we have observed significant asset inflation following Q2 of 2020, which carried on until near the end of 2021 when the Federal Reserve were beginning to hike rates, which was followed by market corrections. Thus, the VIX seem to abruptly peak when there is an unexpected, sudden change in the market condition, which in this case was the COVID-19 pandemic. The volatilty to this day remains high compared to levels before the pandemic, and this can be seen as a result of the market correction. 
+
+```{r}
+vix_covid <- vix[3900:nrow(vix),]
+vix_covid_plot <- ggplot(vix_covid, aes(x=DATE, y=CLOSE)) +
+  geom_line() + 
+  labs(title = "VIX During COVID-19", x="Year", y="Closing")
+vix_covid_plot
+```
+
+
+
