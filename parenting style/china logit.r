@@ -9,19 +9,19 @@ library(PerformanceAnalytics)
 
 
 dat_c <- 
-  read_dta("C:\\Users\\pmhk\\Desktop\\graduate school\\ECO1400\\metrics paper\\CFPS Data\\CFPS Data\\ecfps2010child_201906.dta")
+  read_dta("ecfps2010child_201906.dta")
 
 dat_a <- 
-  read_dta("C:\\Users\\pmhk\\Desktop\\graduate school\\ECO1400\\metrics paper\\CFPS Data\\CFPS Data\\ecfps2010adult_202008.dta")
+  read_dta("ecfps2010adult_202008.dta")
 
 dat_conf <- 
-  read_dta("C:\\Users\\pmhk\\Desktop\\graduate school\\ECO1400\\metrics paper\\CFPS Data\\CFPS Data\\ecfps2010famconf_202008.dta")
+  read_dta("ecfps2010famconf_202008.dta")
 
 dat_econ <- 
-  read_dta("C:\\Users\\pmhk\\Desktop\\graduate school\\ECO1400\\metrics paper\\CFPS Data\\CFPS Data\\ecfps2010famecon_202008.dta")
+  read_dta("ecfps2010famecon_202008.dta")
 
 dat_person <- 
-  read_dta("C:\\Users\\pmhk\\Desktop\\graduate school\\ECO1400\\metrics paper\\CFPS Data\\CFPS Data\\ecfps2018person_202012.dta")
+  read_dta("ecfps2018person_202012.dta")
 
 dat_au <- 
   dat_a %>%
